@@ -59,7 +59,9 @@ export default function App() {
     // Get opponent hand
     if (!isPlayersTurn) {
       setTimeout(() => {
-        setOpponentSelectedHand(hands[0]);
+        setOpponentSelectedHand(
+          hands[Math.floor(Math.random() * hands.length)]
+        );
       }, 1000);
     }
   }, [isPlayersTurn]);
