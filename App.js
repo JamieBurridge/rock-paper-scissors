@@ -1,28 +1,7 @@
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Hand from "./components/Hand";
-
-const rockImage = require("./assets/rock.png");
-const paperImage = require("./assets/paper.png");
-const scissorsImage = require("./assets/scissors.png");
-
-const hands = [
-  {
-    name: "rock",
-    image: rockImage,
-    weakTo: "paper",
-  },
-  {
-    name: "paper",
-    image: paperImage,
-    weakTo: "scissors",
-  },
-  {
-    name: "scissors",
-    image: scissorsImage,
-    weakTo: "rock",
-  },
-];
+import hands from "./utils/hands";
 
 function checkForWinner(
   playerHand,
@@ -55,8 +34,8 @@ export default function App() {
   const [playerScore, setPlayerScore] = useState(0);
   const [opponentScore, setOpponentScore] = useState(0);
 
+  // Get opponent hand
   useEffect(() => {
-    // Get opponent hand
     if (!isPlayersTurn) {
       setTimeout(() => {
         setOpponentSelectedHand(
@@ -66,8 +45,8 @@ export default function App() {
     }
   }, [isPlayersTurn]);
 
+  // Check for winner
   useEffect(() => {
-    // Check for winner
     if (selectedHand && opponentSelectedHand) {
       setTimeout(() => {
         checkForWinner(
@@ -90,6 +69,7 @@ export default function App() {
     <View style={styles.container}>
       <Text style={styles.heading}>Rock, Paper, Scissors</Text>
 
+      {/* Show rock, paper and scissors */}
       <View style={styles.handContainer}>
         {hands.map((hand, index) => (
           <Hand
@@ -101,7 +81,7 @@ export default function App() {
         ))}
       </View>
 
-      {isPlayersTurn == true ? (
+      {isPlayersTurn ? (
         <Pressable
           onPress={() => {
             selectedHand && setIsPlayersTurn(!isPlayersTurn);
