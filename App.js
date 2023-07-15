@@ -30,24 +30,27 @@ function checkForWinner(
   playerScore,
   setPlayerScore,
   opponentScore,
-  setOpponentScore
+  setOpponentScore,
+  setResult
 ) {
   if (playerHand.weakTo == opponentHand.name) {
-    console.log("opponent wins");
     setOpponentScore(opponentScore + 1);
+    setResult("Opponent wins!");
   } else if (opponentHand.weakTo == playerHand.name) {
-    console.log("player wins");
     setPlayerScore(playerScore + 1);
+    setResult("Player wins!");
   } else {
-    console.log("draw");
+    setResult("Draw!");
   }
 }
 
 export default function App() {
-  const [selectedHand, setSelectedHand] = useState();
-  const [opponentSelectedHand, setOpponentSelectedHand] = useState();
+  const [selectedHand, setSelectedHand] = useState(null);
+  const [opponentSelectedHand, setOpponentSelectedHand] = useState(null);
 
   const [isPlayersTurn, setIsPlayersTurn] = useState(true);
+
+  const [result, setResult] = useState(null);
 
   const [playerScore, setPlayerScore] = useState(0);
   const [opponentScore, setOpponentScore] = useState(0);
@@ -57,7 +60,6 @@ export default function App() {
     if (!isPlayersTurn) {
       setTimeout(() => {
         setOpponentSelectedHand(hands[0]);
-        setIsPlayersTurn(true);
       }, 1000);
     }
   }, [isPlayersTurn]);
@@ -72,10 +74,12 @@ export default function App() {
           playerScore,
           setPlayerScore,
           opponentScore,
-          setOpponentScore
+          setOpponentScore,
+          setResult
         );
         setSelectedHand(null);
         setOpponentSelectedHand(null);
+        setIsPlayersTurn(true);
       }, 1000);
     }
   }, [selectedHand, opponentSelectedHand]);
@@ -95,22 +99,33 @@ export default function App() {
         ))}
       </View>
 
-      <Pressable
-        onPress={() => {
-          selectedHand && setIsPlayersTurn(!isPlayersTurn);
-        }}
-      >
-        <button>Confirm</button>
-      </Pressable>
+      {isPlayersTurn == true ? (
+        <Pressable
+          onPress={() => {
+            selectedHand && setIsPlayersTurn(!isPlayersTurn);
+          }}
+        >
+          <button>Confirm</button>
+        </Pressable>
+      ) : (
+        <Text>Opponents turn...</Text>
+      )}
 
-      <Text>Selected hand: {selectedHand?.name || "None"}</Text>
-      <Text>Opponent hand: {opponentSelectedHand?.name || "None"}</Text>
+      <View style={styles.infoContainer}>
+        {/* Selected hands */}
+        <Text style={styles.infoText}>
+          Selected hand: {selectedHand?.name || "None"}
+        </Text>
+        <Text style={styles.infoText}>
+          Opponent hand: {opponentSelectedHand?.name || "None"}
+        </Text>
 
-      <Text>{isPlayersTurn ? "Your turn" : "Opponents turn"}</Text>
+        {/* Scores */}
+        <Text style={styles.infoText}>Your score: {playerScore}</Text>
+        <Text style={styles.infoText}>Opponents score: {opponentScore}</Text>
 
-      <View>
-        <Text>Your score: {playerScore}</Text>
-        <Text>Opponents score: {opponentScore}</Text>
+        {/* Result */}
+        <Text style={styles.resultText}>{result}</Text>
       </View>
     </View>
   );
@@ -135,5 +150,19 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingTop: 20,
     paddingBottom: 20,
+  },
+
+  infoContainer: {
+    paddingTop: 20,
+    paddingBottom: 20,
+  },
+
+  infoText: {
+    fontSize: 17,
+  },
+
+  resultText: {
+    fontSize: 20,
+    fontWeight: 600,
   },
 });
