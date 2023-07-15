@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Hand from "./components/Hand";
-import hands from "./utils/hands";
+import hands from "./data/hands";
 
 function checkForWinner(
   playerHand,
