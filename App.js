@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import Button from "./components/Button";
 import Hand from "./components/Hand";
+import ScoresText from "./components/ScoresText";
 import hands from "./data/hands";
 
 function checkForWinner(
@@ -69,46 +71,35 @@ export default function App() {
     <View style={styles.container}>
       <Text style={styles.heading}>Rock, Paper, Scissors</Text>
 
+      <ScoresText playerScore={playerScore} opponentScore={opponentScore} />
+
       {/* Show rock, paper and scissors */}
       <View style={styles.handContainer}>
         {hands.map((hand, index) => (
           <Hand
             handImage={hand.image}
             hand={hand}
+            selectedHand={selectedHand}
             setSelectedHand={setSelectedHand}
+            opponentSelectedHand={opponentSelectedHand}
             key={index}
           />
         ))}
       </View>
 
       {isPlayersTurn ? (
-        <Pressable
-          onPress={() => {
-            selectedHand && setIsPlayersTurn(!isPlayersTurn);
-          }}
+        <Button
+          onPressFunction={() =>
+            selectedHand && setIsPlayersTurn(!isPlayersTurn)
+          }
         >
-          <button>Confirm</button>
-        </Pressable>
+          Confirm
+        </Button>
       ) : (
         <Text>Opponents turn...</Text>
       )}
 
-      <View style={styles.infoContainer}>
-        {/* Selected hands */}
-        <Text style={styles.infoText}>
-          Selected hand: {selectedHand?.name || "None"}
-        </Text>
-        <Text style={styles.infoText}>
-          Opponent hand: {opponentSelectedHand?.name || "None"}
-        </Text>
-
-        {/* Scores */}
-        <Text style={styles.infoText}>Your score: {playerScore}</Text>
-        <Text style={styles.infoText}>Opponents score: {opponentScore}</Text>
-
-        {/* Result */}
-        <Text style={styles.resultText}>{result}</Text>
-      </View>
+      <Text style={styles.resultText}>{result}</Text>
     </View>
   );
 }
@@ -116,9 +107,10 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
+    backgroundColor: "#fff",
     paddingTop: 20,
+    gap: 20,
   },
 
   heading: {
@@ -132,15 +124,6 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingTop: 20,
     paddingBottom: 20,
-  },
-
-  infoContainer: {
-    paddingTop: 20,
-    paddingBottom: 20,
-  },
-
-  infoText: {
-    fontSize: 17,
   },
 
   resultText: {
